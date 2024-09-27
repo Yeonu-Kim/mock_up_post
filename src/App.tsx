@@ -1,9 +1,14 @@
-import './reset.css';
+import { ThemeProvider } from 'styled-components';
 
-import { useReducer } from 'react';
+import { GlobalStyles } from './components/styles/GlobalStyle.styled.tsx';
+import { theme } from './components/styles/theme.ts';
+import { MainPage } from './pages/MainPage';
 
 export const App = () => {
-  const [count, increment] = useReducer((c: number) => c + 1, 0);
-
-  return <button onClick={increment}>{count}</button>;
+  return (
+    <ThemeProvider theme={theme}>
+      <GlobalStyles />
+      <MainPage />
+    </ThemeProvider>
+  );
 };
