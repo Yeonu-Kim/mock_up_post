@@ -3,7 +3,7 @@ import styled from 'styled-components';
 type StyledFontProps = {
   size?: 'XL' | 'L' | 'R' | 'S';
   bold?: boolean;
-  color?: 'white' | 'black' | 'primary' | 'inherit';
+  color?: 'white' | 'black' | 'primary' | 'gray' | 'inherit';
 };
 
 export const StyledFont = styled.span<StyledFontProps>`

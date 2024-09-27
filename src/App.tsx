@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'styled-components';
 
-import { GlobalStyles } from './components/styles/GlobalStyle.styled.tsx';
+import { GlobalStyles } from './components/styles/GlobalStyle.styled.ts';
 import { theme } from './components/styles/theme.ts';
 import { MainPage } from './pages/MainPage';
 
