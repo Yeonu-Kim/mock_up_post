@@ -57,4 +57,6 @@ export const StyledContainerH = styled(createFlexContainer('row'))`
         : 'flex-start'};
 `;
 
-export const StyledFullContainerH = createFlexContainer('row');
+export const StyledFullContainerH = styled(createFlexContainer('row'))`
+  justify-content: space-between;
+`;

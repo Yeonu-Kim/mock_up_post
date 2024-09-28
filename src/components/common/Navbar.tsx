@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+import { StyledButton } from '../styles/Button.styled';
 import { StyledContainer, StyledContainerH } from '../styles/Container.styled';
 import { StyledFont } from '../styles/Font.styled';
 
@@ -36,6 +37,18 @@ export const Navbar: React.FC = () => {
     <>
       <StyledCloseButton open={open} onClick={toggleSidebar} />
       <StyledNavBarContainer open={open}>
+        <StyledButton padding={2}>글 작성하기</StyledButton>
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
+        <NavMenu title="제목 1" writer="김연우" />
         <NavMenu title="제목 1" writer="김연우" />
         <NavMenu title="제목 1" writer="김연우" />
       </StyledNavBarContainer>
@@ -45,19 +58,22 @@ export const Navbar: React.FC = () => {
 
 const StyledNavBarContainer = styled.div<SidebarProps>`
   display: flex;
-  position: sticky;
   flex-direction: column;
   padding: 2rem;
-  padding-top: ${(props) => (props.open ? '6rem' : '0')};
+  padding-top: ${(props) => (props.open ? '8rem' : '0')};
   gap: 1rem;
   top: 0px;
   left: 0px;
   z-index: 1;
   width: 100%;
-  height: ${(props) => (props.open ? '100dvh' : '8rem')};
+  min-height: ${(props) => (props.open ? '100dvh' : '8rem')};
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 
   & > div {
+    display: ${(props) => (props.open ? 'flex' : 'none')};
+  }
+
+  & > button {
     display: ${(props) => (props.open ? 'flex' : 'none')};
   }
 
