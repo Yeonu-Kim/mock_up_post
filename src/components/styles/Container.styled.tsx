@@ -37,9 +37,9 @@ export const StyledContainer = styled(createFlexContainer())`
         : 'flex-start'};
 `;
 
-export const StyledFullContainer = styled(createFlexContainer())`
-  justify-content: space-between;
-`;
+// export const StyledFullContainer = styled(createFlexContainer())`
+//   justify-content: space-between;
+// `;
 
 export const StyledContainerH = styled(createFlexContainer('row'))`
   justify-content: ${({ alignH }) =>
