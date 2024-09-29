@@ -1,4 +1,4 @@
-import type { GetPostListResponse, GetPostResponse } from '../types';
+import type { GetPostListResponse, GetPostResponse } from '../entities';
 import { client } from './client';
 
 export const getPost = async (postId: number): Promise<GetPostResponse> => {

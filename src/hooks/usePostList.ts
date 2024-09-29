@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { getPostList, getUserName } from '../api';
-import type { Post } from '../types';
+import type { Post } from '../entities';
 
 type PostListWithUsername = Omit<Post, 'userId'> & {
   username: string;

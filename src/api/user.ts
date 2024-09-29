@@ -1,4 +1,4 @@
-import type { GetUserNameResponse, User } from '../types';
+import type { GetUserNameResponse, User } from '../entities';
 import { client } from './client';
 
 export const getUserName = async (

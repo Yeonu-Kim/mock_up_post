@@ -1,4 +1,4 @@
-import type { GetCommentResponse } from '../types';
+import type { GetCommentResponse } from '../entities';
 import { client } from './client';
 
 export const getCommentList = async (
