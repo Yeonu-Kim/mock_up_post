@@ -58,9 +58,9 @@ export const Navbar = ({ setPostId }: NavbarProps) => {
   const renderNavBar = () => {
     if (isPostListLoading || isUsernamesLoading) {
       return (
-        <StyledNavBarContainer open={open}>
+        <StyledLoadingContainer open={open}>
           <StyledFont>Loading...</StyledFont>
-        </StyledNavBarContainer>
+        </StyledLoadingContainer>
       );
     }
 
@@ -127,13 +127,13 @@ const StyledNavBarContainer = styled.div<SidebarProps>`
   }
 
   @media (min-width: 768px) {
-    display: ${(props) => (props.open ? 'flex' : 'none')};
+    display: flex;
     flex-direction: column;
     gap: 2rem;
     position: fixed;
     top: 0;
     left: 0;
-    width: ${(props) => (props.open ? '30rem' : '0')};
+    width: 30rem;
     height: 100dvh;
     box-shadow: rgba(99, 99, 99, 0.2) 2px 2px 8px 8px;
     overflow-x: hidden;
@@ -153,6 +153,14 @@ const StyledNavBarContainer = styled.div<SidebarProps>`
 
     &::-webkit-scrollbar-track {
       background: transparent;
+    }
+
+    & > div {
+      display: flex;
+    }
+
+    & > button {
+      display: flex;
     }
   }
 `;
@@ -211,4 +219,8 @@ const StyledNavMenu = styled(StyledContainer)`
   @media (max-width: 768px) {
     display: none;
   }
+`;
+
+const StyledLoadingContainer = styled(StyledNavBarContainer)`
+  padding-top: 8rem;
 `;
