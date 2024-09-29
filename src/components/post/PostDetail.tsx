@@ -1,42 +1,57 @@
 import styled from 'styled-components';
 
+import { useComment } from '../../hooks/useComment';
+import { usePost } from '../../hooks/usePost';
 import { StyledButton } from '../styles/Button.styled';
 import {
   StyledContainer,
   StyledFullContainerH,
 } from '../styles/Container.styled';
 import { StyledFont } from '../styles/Font.styled';
-
+import { Comment } from './Comment';
 type PostDetailProps = {
-  comment: string;
-  commentWriter: string;
+  postId: number;
 };
-export const PostDetail = () => {
-  const CommentContainer = ({ comment, commentWriter }: PostDetailProps) => {
+
+export const PostDetail = ({ postId }: PostDetailProps) => {
+  const { postWithUsername, isPostDetailLoading, isPostError } =
+    usePost(postId);
+  const { comments, isCommentsLoading, isCommentsError } = useComment(postId);
+
+  if (isPostDetailLoading || isCommentsLoading) {
     return (
-      <StyledContainer>
-        <StyledFont>{comment}</StyledFont>
-        <StyledFullContainerH>
-          <StyledFont size="S" color="gray">
-            {commentWriter}
-          </StyledFont>
-          <ButtonContainer>
-            <StyledButton>수정</StyledButton>
-            <StyledButton>삭제</StyledButton>
-          </ButtonContainer>
-        </StyledFullContainerH>
-      </StyledContainer>
+      <StyledPostDetail alignH="center" gap={4}>
+        <StyledFont>Loading...</StyledFont>
+      </StyledPostDetail>
     );
-  };
+  }
+
+  if (isPostError || isCommentsError) {
+    return (
+      <StyledPostDetail alignH="center" gap={4}>
+        <StyledFont>에러가 발생하였습니다.</StyledFont>
+        <StyledFont>나중에 다시 실행해주세요.</StyledFont>
+      </StyledPostDetail>
+    );
+  }
+
+  if (postWithUsername === undefined) {
+    return (
+      <StyledPostDetail alignH="center" gap={4}>
+        <StyledFont>존재하지 않는 글입니다.</StyledFont>
+      </StyledPostDetail>
+    );
+  }
+
   return (
     <StyledPostDetail gap={4}>
       <StyledContainer gap={2}>
         <StyledFont size="L" bold>
-          제목
+          {postWithUsername.title}
         </StyledFont>
         <StyledFullContainerH>
           <StyledFont size="S" color="gray">
-            작성자
+            {postWithUsername.username}
           </StyledFont>
           <ButtonContainer>
             <StyledButton>수정</StyledButton>
@@ -44,40 +59,41 @@ export const PostDetail = () => {
           </ButtonContainer>
         </StyledFullContainerH>
       </StyledContainer>
-      <StyledFont>글 내용</StyledFont>
+      <StyledFont>{postWithUsername.body}</StyledFont>
+
       <StyledContainer gap={2}>
         <StyledFont bold>댓글</StyledFont>
         <StyledContainer alignH="right">
-          <CommentInput />
+          <CommentInput placeholder="댓글을 입력하세요." />
           <StyledButton>댓글 작성</StyledButton>
         </StyledContainer>
-        <StyledContainer>
-          <CommentContainer comment="댓글" commentWriter="김연우" />
-        </StyledContainer>
-        <StyledContainer>
-          <CommentContainer comment="댓글" commentWriter="김연우" />
-        </StyledContainer>
-        <StyledContainer>
-          <CommentContainer comment="댓글" commentWriter="김연우" />
-        </StyledContainer>
+
+        {comments !== undefined ? (
+          comments.map((comment, index: number) => (
+            <StyledContainer key={index}>
+              <Comment comment={comment.body} email={comment.email} />
+            </StyledContainer>
+          ))
+        ) : (
+          <StyledFont>첫 댓글을 작성해보세요.</StyledFont>
+        )}
       </StyledContainer>
     </StyledPostDetail>
   );
 };
 
 const StyledPostDetail = styled(StyledContainer)`
-  padding: 0rem 3rem;
+  width: 100%;
+  padding: 0 3rem;
+  margin-bottom: 6rem;
 
   @media (min-width: 768px) {
-    max-width: 80rem;
-    margin: 0 auto;
+    width: calc(100dvw - 30rem);
+    padding: 0 6rem;
     padding-top: 10rem;
+    position: relative;
+    margin-left: 30rem;
   }
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  gap: 1rem;
 `;
 
 const CommentInput = styled.textarea`
@@ -87,7 +103,7 @@ const CommentInput = styled.textarea`
   border: 0.5px solid ${({ theme }) => theme.color.gray};
   border-radius: 4px;
   resize: none;
-  height: 100px;
+  height: 4rem;
   margin-bottom: 1rem;
   transition: border-color 0.3s ease;
 
@@ -95,4 +111,9 @@ const CommentInput = styled.textarea`
     outline: none;
     box-shadow: rgba(99, 99, 99, 0.2) 2px 2px 8px 2px;
   }
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1rem;
 `;

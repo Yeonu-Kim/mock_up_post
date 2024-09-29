@@ -1,7 +1,7 @@
-// Sidebar.tsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
+import { usePostList } from '../../hooks/usePostList';
 import { StyledButton } from '../styles/Button.styled';
 import { StyledContainer, StyledContainerH } from '../styles/Container.styled';
 import { StyledFont } from '../styles/Font.styled';
@@ -13,18 +13,40 @@ type SidebarProps = {
 type NavMenuProps = {
   title: string;
   writer: string;
+  postId: number;
 };
 
-export const Navbar: React.FC = () => {
-  const [open, setOpen] = useState(false);
+type NavbarProps = {
+  setPostId: React.Dispatch<React.SetStateAction<number>>;
+};
+
+export const Navbar = ({ setPostId }: NavbarProps) => {
+  const {
+    postListWithUsernames,
+    isPostListLoading,
+    isUsernamesLoading,
+    isPostListError,
+    isUsernamesError,
+  } = usePostList();
+
+  const [open, setOpen] = useState(true);
 
   const toggleSidebar = () => {
     setOpen(!open);
   };
 
-  const NavMenu = ({ title, writer }: NavMenuProps) => {
+  const handleClickPost = (postId: number) => {
+    setPostId(postId);
+    setOpen(false);
+  };
+
+  const NavMenu = ({ title, writer, postId }: NavMenuProps) => {
     return (
-      <StyledNavMenu>
+      <StyledNavMenu
+        onClick={() => {
+          handleClickPost(postId);
+        }}
+      >
         <StyledFont bold>{title}</StyledFont>
         <StyledContainerH>
           <StyledFont size="S">{writer}</StyledFont>
@@ -33,24 +55,51 @@ export const Navbar: React.FC = () => {
     );
   };
 
+  const renderNavBar = () => {
+    if (isPostListLoading || isUsernamesLoading) {
+      return (
+        <StyledNavBarContainer open={open}>
+          <StyledFont>Loading...</StyledFont>
+        </StyledNavBarContainer>
+      );
+    }
+
+    if (isPostListError || isUsernamesError) {
+      return (
+        <StyledNavBarContainer open={open}>
+          <StyledFont>에러가 발생했습니다.</StyledFont>
+          <StyledFont>잠시 후 다시 시도해주세요.</StyledFont>
+        </StyledNavBarContainer>
+      );
+    }
+
+    if (
+      postListWithUsernames !== undefined &&
+      postListWithUsernames.length > 0
+    ) {
+      return postListWithUsernames.map((post) => (
+        <NavMenu
+          key={post.id}
+          title={post.title}
+          writer={post.username}
+          postId={post.id}
+        />
+      ));
+    }
+
+    return (
+      <StyledNavBarContainer open={open}>
+        <StyledFont>작성된 글이 없습니다.</StyledFont>
+      </StyledNavBarContainer>
+    );
+  };
+
   return (
     <>
       <StyledCloseButton open={open} onClick={toggleSidebar} />
       <StyledNavBarContainer open={open}>
         <StyledButton padding={2}>글 작성하기</StyledButton>
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
-        <NavMenu title="제목 1" writer="김연우" />
+        {renderNavBar()}
       </StyledNavBarContainer>
     </>
   );
@@ -81,14 +130,16 @@ const StyledNavBarContainer = styled.div<SidebarProps>`
     display: ${(props) => (props.open ? 'flex' : 'none')};
     flex-direction: column;
     gap: 2rem;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: ${(props) => (props.open ? '30rem' : '0')};
     height: 100dvh;
     box-shadow: rgba(99, 99, 99, 0.2) 2px 2px 8px 8px;
     overflow-x: hidden;
     overflow-y: scroll;
     transition: 0.3s;
-    padding: 8rem 2rem;
+    padding: 2rem 2rem;
 
     scrollbar-width: thin;
     scrollbar-color: ${({ theme }) => theme.color.gray} transparent;
@@ -131,6 +182,10 @@ const StyledCloseButton = styled.span<SidebarProps>`
   &:after {
     top: ${({ open }) => (open ? '0' : '1.5rem')};
     transform: ${({ open }) => (open ? 'rotate(-45deg)' : 'rotate(-90deg)')};
+  }
+
+  @media (min-width: 768px) {
+    display: none;
   }
 `;
 
